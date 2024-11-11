@@ -1,30 +1,28 @@
-package dev.canverse.server.domain.reservation;
+package dev.canverse.server.domain.model.reservation;
 
-import dev.canverse.server.domain.user.User;
+import dev.canverse.server.domain.model.resource.Resource;
+import dev.canverse.server.domain.model.user.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.Map;
 
 @Entity
-@Table(name = "reservations")
+@Table(name = "reservations", schema = "reservation")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Reservation {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public abstract class Reservation<T extends Resource> {
     @Id
     @Getter
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "reservable_id")
-    private Reservable reservable;
+    @Getter
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Resource.class)
+    private T resource;
 
     @Getter
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
@@ -38,16 +36,12 @@ public abstract class Reservation {
     @Column(nullable = false)
     private LocalDateTime endDateTime;
 
-    @Getter(AccessLevel.PROTECTED)
-    @Setter(AccessLevel.PROTECTED)
-    @JdbcTypeCode(SqlTypes.JSON)
-    private Map<String, Object> metadata = new HashMap<>();
 
     public Reservation() {
     }
 
-    public Reservation(Reservable reservable, User user, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        setReservable(reservable);
+    public Reservation(T resource, User user, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        setResource(resource);
         //setUser(user);
         setPeriod(startDateTime, endDateTime);
     }
@@ -63,11 +57,14 @@ public abstract class Reservation {
         this.endDateTime = endDateTime.truncatedTo(ChronoUnit.MINUTES);
     }
 
-    protected void setReservable(Reservable reservable) {
-        if (reservable == null || reservable.getId() == null)
+    public void setResource(T resource) {
+        if (resource == null || resource.getId() == null)
             throw new IllegalArgumentException("Reservable must not be null");
 
-        this.reservable = reservable;
+        if (this.resource != null && this.resource.getId().equals(resource.getId()))
+            throw new IllegalArgumentException("Reservable must be different from the current one");
+
+        this.resource = resource;
     }
 
     public void setUser(User user) {

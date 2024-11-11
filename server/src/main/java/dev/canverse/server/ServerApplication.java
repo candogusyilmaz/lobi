@@ -1,43 +1,42 @@
 package dev.canverse.server;
 
-import dev.canverse.server.domain.vehicle.*;
-import dev.canverse.server.infrastructure.persistence.jpa.*;
+import dev.canverse.server.domain.model.lookup.VehicleBrand;
+import dev.canverse.server.domain.model.lookup.VehicleLocation;
+import dev.canverse.server.domain.model.lookup.VehicleModel;
+import dev.canverse.server.domain.model.reservation.VehicleReservation;
+import dev.canverse.server.domain.model.resource.Vehicle;
+import dev.canverse.server.infrastructure.persistence.jpa.VehicleJpaRepository;
+import dev.canverse.server.infrastructure.persistence.jpa.VehicleReservationJpaRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDateTime;
+import java.util.TimeZone;
 
 @SpringBootApplication
 public class ServerApplication {
 
     public static void main(String[] args) {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         SpringApplication.run(ServerApplication.class, args);
     }
 
     @Bean
-    CommandLineRunner init(VehicleLocationJpaRepository vlr, VehicleReservationJpaRepository repo, VehicleBrandJpaRepository vbr, VehicleModelJpaRepository vmr, VehicleJpaRepository veh) {
+    CommandLineRunner init(VehicleReservationJpaRepository vrjp, VehicleJpaRepository vejh) {
         return args -> {
             var vehicleBrand = new VehicleBrand("Toyota");
-            vbr.save(vehicleBrand);
-
             var vehicleModel = new VehicleModel(vehicleBrand, "Corolla");
-            vmr.save(vehicleModel);
-
             var vehicleLocation = new VehicleLocation("Lagos");
-            vlr.save(vehicleLocation);
-
             var vehicle = new Vehicle(vehicleModel, vehicleLocation, 2021, "ABC123");
-            veh.save(vehicle);
+            vejh.saveAndFlush(vehicle);
 
             var vReservation = new VehicleReservation(vehicle, null, LocalDateTime.now(), LocalDateTime.now().plusHours(1));
-            vReservation.setStartKilometers(100);
-            repo.save(vReservation);
+            vReservation.getMetadata().setStartKilometers(100);
+            vrjp.saveAndFlush(vReservation);
 
-            var all = repo.findAll();
-
-            System.out.println(all);
+            vrjp.findAll();
         };
     }
 }

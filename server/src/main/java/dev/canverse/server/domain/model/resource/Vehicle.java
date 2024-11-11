@@ -1,22 +1,25 @@
-package dev.canverse.server.domain.vehicle;
+package dev.canverse.server.domain.model.resource;
 
-import dev.canverse.server.domain.reservation.Reservable;
+import dev.canverse.server.domain.model.lookup.VehicleLocation;
+import dev.canverse.server.domain.model.lookup.VehicleModel;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Locale;
+import java.util.Objects;
 
 @Getter
 @Entity
-@Table(name = "vehicles")
-public class Vehicle extends Reservable {
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+@Table(name = "vehicles", schema = "resource")
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+public class Vehicle extends Resource {
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
     private VehicleModel model;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
     private VehicleLocation location;
 
     @Setter
@@ -36,24 +39,18 @@ public class Vehicle extends Reservable {
     }
 
     public void setBrand(VehicleModel model) {
-        if (model == null || model.getId() == null)
-            throw new IllegalArgumentException("Brand cannot be null");
-
-        this.model = model;
+        this.model = Objects.requireNonNull(model, "Model cannot be null");
     }
 
     public void setLocation(VehicleLocation location) {
-        if (location == null || location.getId() == null)
-            throw new IllegalArgumentException("Location cannot be null");
-
-        this.location = location;
+        this.location = Objects.requireNonNull(location, "Location cannot be null");
     }
 
     public void setLicensePlate(String licensePlate) {
         if (licensePlate == null || licensePlate.isEmpty())
             throw new IllegalArgumentException("License plate cannot be blank");
 
-        licensePlate = StringUtils.upperCase(licensePlate).toUpperCase(Locale.ENGLISH);
+        licensePlate = StringUtils.upperCase(StringUtils.deleteWhitespace(licensePlate)).toUpperCase(Locale.ENGLISH);
 
         if (licensePlate.length() < 3 || licensePlate.length() > 31)
             throw new IllegalArgumentException("License plate must be between 3 and 31 characters");

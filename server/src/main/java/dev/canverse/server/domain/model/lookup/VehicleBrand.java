@@ -1,36 +1,28 @@
-package dev.canverse.server.domain.vehicle;
+package dev.canverse.server.domain.model.lookup;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
 @Getter
 @Entity
-@Table(name = "vehicle_models")
-public class VehicleModel {
+@Table(name = "vehicle_brands", schema = "lookup")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class VehicleBrand {
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private VehicleBrand brand;
 
     @Column(nullable = false, length = 63)
     private String name;
 
-    protected VehicleModel() {
+    protected VehicleBrand() {
     }
 
-    public VehicleModel(VehicleBrand brand, String name) {
-        setBrand(brand);
+    public VehicleBrand(String name) {
         setName(name);
-    }
-
-    public void setBrand(VehicleBrand brand) {
-        if (brand == null || brand.getId() == null)
-            throw new IllegalArgumentException("Brand cannot be null");
-
-        this.brand = brand;
     }
 
     public void setName(String name) {

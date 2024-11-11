@@ -1,6 +1,6 @@
 package dev.canverse.server.infrastructure.persistence.jpa;
 
-import dev.canverse.server.domain.vehicle.VehicleReservation;
+import dev.canverse.server.domain.model.reservation.VehicleReservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
