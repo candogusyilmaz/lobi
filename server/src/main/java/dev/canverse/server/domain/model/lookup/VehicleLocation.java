@@ -30,11 +30,6 @@ public class VehicleLocation {
         setName(name);
     }
 
-    public VehicleLocation(String name, VehicleLocation parent) {
-        setName(name);
-        setParent(parent);
-    }
-
     public void setName(String name) {
         if (StringUtils.isBlank(name))
             throw new IllegalArgumentException("Name cannot be blank");
