@@ -1,4 +1,4 @@
-package dev.canverse.server.application.services;
+package dev.canverse.server.application.service;
 
 import dev.canverse.server.application.dto.Hello;
 import lombok.RequiredArgsConstructor;

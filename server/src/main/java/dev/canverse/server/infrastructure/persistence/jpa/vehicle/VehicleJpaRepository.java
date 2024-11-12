@@ -1,4 +1,4 @@
-package dev.canverse.server.infrastructure.persistence.jpa;
+package dev.canverse.server.infrastructure.persistence.jpa.vehicle;
 
 import dev.canverse.server.domain.model.resource.Vehicle;
 import org.springframework.data.jpa.repository.JpaRepository;

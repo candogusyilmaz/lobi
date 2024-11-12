@@ -1,7 +1,7 @@
 package dev.canverse.server.presentation.rest;
 
 import dev.canverse.server.application.dto.Hello;
-import dev.canverse.server.application.services.HelloService;
+import dev.canverse.server.application.service.HelloService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
