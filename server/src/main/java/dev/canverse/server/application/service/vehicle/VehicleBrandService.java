@@ -16,6 +16,6 @@ public class VehicleBrandService {
 
         vehicleBrandJpaRepository.save(brand);
 
-        return new VehicleBrandCreate.Response(brand.getId(), brand.getName());
+        return new VehicleBrandCreate.Response(brand.getId().toString(), brand.getName());
     }
 }
