@@ -13,8 +13,8 @@ import java.net.URI;
 @RestControllerAdvice
 public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ProblemDetail> handleIllegalArgumentException(IllegalArgumentException ex, ServletWebRequest request) {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ProblemDetail> handleExceptions(RuntimeException ex, ServletWebRequest request) {
         var detail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
 
         detail.setInstance(URI.create(request.getRequest().getRequestURI()));
