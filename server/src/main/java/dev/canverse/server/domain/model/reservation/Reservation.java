@@ -3,7 +3,6 @@ package dev.canverse.server.domain.model.reservation;
 import dev.canverse.server.domain.model.resource.Resource;
 import dev.canverse.server.domain.model.user.User;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -12,11 +11,10 @@ import java.time.temporal.ChronoUnit;
 @Entity
 @Table(name = "reservations", schema = "reservation")
 @Inheritance(strategy = InheritanceType.JOINED)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public abstract class Reservation<T extends Resource> {
     @Id
     @Getter
-    @EqualsAndHashCode.Include
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -35,7 +33,6 @@ public abstract class Reservation<T extends Resource> {
     @Getter
     @Column(nullable = false)
     private LocalDateTime endDateTime;
-
 
     public Reservation() {
     }
@@ -61,7 +58,7 @@ public abstract class Reservation<T extends Resource> {
         if (resource == null || resource.getId() == null)
             throw new IllegalArgumentException("Reservable must not be null");
 
-        if (this.resource != null && this.resource.getId().equals(resource.getId()))
+        if (this.resource != null && resource.getId().equals(this.resource.getId()))
             throw new IllegalArgumentException("Reservable must be different from the current one");
 
         this.resource = resource;

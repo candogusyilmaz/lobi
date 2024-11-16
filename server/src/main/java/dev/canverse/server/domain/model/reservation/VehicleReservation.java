@@ -6,14 +6,12 @@ import dev.canverse.server.domain.valueobject.VehicleReservationMetadata;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "vehicle_reservations", schema = "reservation")
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class VehicleReservation extends Reservation<Vehicle> {
     @Getter
     @Embedded

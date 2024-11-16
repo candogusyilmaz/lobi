@@ -1,24 +1,21 @@
 package dev.canverse.server.domain.model.lookup;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
 
 @Entity
-@Table(name = "vehicle_models", schema = "lookup")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name = "vehicle_models", uniqueConstraints = {@UniqueConstraint(name = "unique_by_brand_id_and_name", columnNames = {"brand_id", "name"})}, schema = "lookup")
 public class VehicleModel {
     @Id
     @Getter
-    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Getter
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private VehicleBrand brand;
 
     @Getter
@@ -38,8 +35,7 @@ public class VehicleModel {
     }
 
     public void setName(String name) {
-        if (StringUtils.isBlank(name))
-            throw new IllegalArgumentException("Name cannot be blank");
+        if (StringUtils.isBlank(name)) throw new IllegalArgumentException("Name cannot be blank");
 
         name = StringUtils.normalizeSpace(name.trim());
 

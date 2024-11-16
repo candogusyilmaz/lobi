@@ -1,7 +1,6 @@
 package dev.canverse.server.domain.model.user;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 
@@ -11,11 +10,9 @@ import lombok.Getter;
  */
 @Entity
 @Table(name = "users")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
     @Id
     @Getter
-    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

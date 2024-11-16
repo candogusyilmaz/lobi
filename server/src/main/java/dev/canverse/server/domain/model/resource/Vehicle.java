@@ -3,7 +3,6 @@ package dev.canverse.server.domain.model.resource;
 import dev.canverse.server.domain.model.lookup.VehicleLocation;
 import dev.canverse.server.domain.model.lookup.VehicleModel;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -11,20 +10,22 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Locale;
 import java.util.Objects;
 
-@Getter
 @Entity
 @Table(name = "vehicles", schema = "resource")
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class Vehicle extends Resource {
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
+    @Getter
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private VehicleModel model;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
+    @Getter
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private VehicleLocation location;
 
+    @Getter
     @Setter
     private Integer year;
 
+    @Getter
     @Column(nullable = false, length = 31)
     private String licensePlate;
 
@@ -50,7 +51,7 @@ public class Vehicle extends Resource {
         if (licensePlate == null || licensePlate.isEmpty())
             throw new IllegalArgumentException("License plate cannot be blank");
 
-        licensePlate = StringUtils.upperCase(StringUtils.deleteWhitespace(licensePlate)).toUpperCase(Locale.ENGLISH);
+        licensePlate = StringUtils.upperCase(StringUtils.deleteWhitespace(licensePlate)).toUpperCase(Locale.ROOT);
 
         if (licensePlate.length() < 3 || licensePlate.length() > 31)
             throw new IllegalArgumentException("License plate must be between 3 and 31 characters");

@@ -1,27 +1,20 @@
 package dev.canverse.server.domain.model.lookup;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
 @Entity
 @Table(name = "vehicle_locations", schema = "lookup")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class VehicleLocation {
     @Id
     @Getter
-    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Getter
-    @Column(nullable = false, length = 63)
+    @Column(nullable = false, length = 63, unique = true)
     private String name;
-
-    @Getter
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private VehicleLocation parent;
 
     protected VehicleLocation() {
     }
@@ -40,15 +33,5 @@ public class VehicleLocation {
             throw new IllegalArgumentException("Name must be between 2 and 63 characters");
 
         this.name = name;
-    }
-
-    public void setParent(VehicleLocation parent) {
-        if (parent == null)
-            throw new IllegalArgumentException("Parent cannot be null");
-
-        if (this.equals(parent) || this.getId().equals(parent.getId()))
-            throw new IllegalArgumentException("Parent cannot be self");
-
-        this.parent = parent;
     }
 }

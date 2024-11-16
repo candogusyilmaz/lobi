@@ -1,21 +1,19 @@
 package dev.canverse.server.domain.model.lookup;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
-@Getter
 @Entity
 @Table(name = "vehicle_brands", schema = "lookup")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class VehicleBrand {
     @Id
-    @EqualsAndHashCode.Include
+    @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 63)
+    @Getter
+    @Column(nullable = false, length = 63, unique = true)
     private String name;
 
     protected VehicleBrand() {
